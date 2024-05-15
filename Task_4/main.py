@@ -1,35 +1,29 @@
-from colorama import Fore
-import input_handler
-import contact_operations
+from record import Record
+from address_book import AddressBook
 
 def main():
-    print(Fore.CYAN + "Welcome to the assistant bot!")
-    contacts = {}
-    while True:
-        user_input = input(Fore.BLUE + "Enter a command: ")
-        command, *args = input_handler.parse_input(user_input)
+    book = AddressBook()
 
-        if command in ["close", "exit"]:
-            print(Fore.CYAN + "Good bye!")
-            break
+    john_record = Record("John")
+    john_record.add_phone("1234567890")
+    john_record.add_phone("5555555555")
+    book.add_record(john_record)
 
-        elif command == "hello":
-            print(Fore.GREEN + "How can I help you?")
+    jane_record = Record("Jane")
+    jane_record.add_phone("9876543210")
+    book.add_record(jane_record)
 
-        elif command == "add":
-            contact_operations.add_contact(args, contacts)
+    for name, record in book.data.items():
+        print(record)
 
-        elif command == "change":
-            contact_operations.change_contact(args, contacts)
+    john = book.find("John")
+    john.edit_phone("1234567890", "1112223333")
+    print(john)
 
-        elif command == "phone":
-            print(contact_operations.show_phone(args, contacts))
+    found_phone = john.find_phone("5555555555")
+    print(f"{john.name}: {found_phone}")
 
-        elif command == "all":
-            print(contact_operations.show_all(contacts))
-
-        else:
-            print(Fore.RED + "Invalid command.")
+    book.delete("Jane")
 
 if __name__ == "__main__":
     main()
